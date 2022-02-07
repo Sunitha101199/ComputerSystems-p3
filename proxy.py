@@ -47,21 +47,7 @@ class HTTPServer:
             # print(fname)
             body=""
 
-            if(cdirectory=="/www"):
-                for files in os.listdir(cdirectory[1:]):
-                    body+=f'<a href="{os.path.join(cdirectory,files)}">{files}</a><br>'
-                head = f'HTTP/1.1 200 OK \nContent-Type: text/html\nContent-Length: {str(len(body))} \nConnection: close\n\n'
-                print(head)
-                connection.sendall((head+body).encode())
-                
-            elif(cdirectory=="/www/rough"):
-                for file in os.listdir(cdirectory[1:]):
-                    body+=f'<a href="{os.path.join(cdirectory,file)}">{file}</a><br>'
-                head = f'HTTP/1.1 200 OK \nContent-Type: text/html\nContent-Length: {str(len(body))} \nConnection: close\n\n'
-                print(head)
-                connection.sendall((head+body).encode())
-            
-            elif(cdirectory=="/"):
+            if(cdirectory=="/"):
                 body = "<h1>Developing Web Server</h1><br>"+'\r\n'
                 headers = ""
                 headers += "HTTP/1.1 200 OK"+'\r\n'
@@ -72,17 +58,33 @@ class HTTPServer:
                 data = bytes(headers+body,'utf-8')
                 connection.sendall(data)
 
-            elif(cdirectory=="/bin"):
-                for (root,dirs,files) in os.walk('bin', topdown=True):
-                    print (root)
-                    print (dirs)
-                    print (files)
-                    print ('--------------------------------')
-                for file in os.listdir(cdirectory[1:]):
-                    body+=f'<a href="{os.path.join(cdirectory,file)}">{file}</a><br>'
+            elif(os.path.isdir(data_url)):
+
+                # if(cdirectory=="/www"):
+                for files in os.listdir(cdirectory[1:]):
+                    body+=f'<a href="{os.path.join(cdirectory,files)}">{files}</a><br>'
                 head = f'HTTP/1.1 200 OK \nContent-Type: text/html\nContent-Length: {str(len(body))} \nConnection: close\n\n'
                 print(head)
                 connection.sendall((head+body).encode())
+                    
+                # elif(cdirectory=="/www/rough"):
+                #     for file in os.listdir(cdirectory[1:]):
+                #         body+=f'<a href="{os.path.join(cdirectory,file)}">{file}</a><br>'
+                #     head = f'HTTP/1.1 200 OK \nContent-Type: text/html\nContent-Length: {str(len(body))} \nConnection: close\n\n'
+                #     print(head)
+                #     connection.sendall((head+body).encode())
+                
+                # elif(cdirectory=="/bin"):
+                #     # for (root,dirs,files) in os.walk('bin', topdown=True):
+                #     #     print (root)
+                #     #     print (dirs)
+                #     #     print (files)
+                #     #     print ('--------------------------------')
+                #     for file in os.listdir(cdirectory[1:]):
+                #         body+=f'<a href="{os.path.join(cdirectory,file)}">{file}</a><br>'
+                #     head = f'HTTP/1.1 200 OK \nContent-Type: text/html\nContent-Length: {str(len(body))} \nConnection: close\n\n'
+                #     print(head)
+                #     connection.sendall((head+body).encode())
             
             elif(cdirectory=="/bin/du"):
                 # p1 = exec('du')
@@ -115,6 +117,17 @@ class HTTPServer:
                 # print(p,"P")
                 head = f'HTTP/1.1 200 OK \nContent-Type: text/plain\nContent-Length: {str(len(p))} \nConnection: close\n\n'
                 head += p
+                print(head,"HEAD")
+                connection.sendall((head).encode())
+            
+            elif(cdirectory=="/bin/rough/Sample.py"):
+                output = subprocess.Popen(['python',data_url],stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
+                print(output,"OUTPUT")
+                out = output.communicate()[0]
+                p = out.decode()
+                body = f"<h1>{p}</h1><br>"+'\r\n'
+                head = f'HTTP/1.1 200 OK \nContent-Type: text/HTML \nContent-Length: {str(len(body))}\nConnection: close\n\n'
+                head += body
                 print(head,"HEAD")
                 connection.sendall((head).encode())
 
