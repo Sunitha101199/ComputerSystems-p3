@@ -59,6 +59,7 @@ class HTTPServer:
                 connection.sendall(data)
 
             elif(os.path.isdir(data_url)):
+                #for all folders, www, bin, www/rough, bin/rough
 
                 # if(cdirectory=="/www"):
                 for files in os.listdir(cdirectory[1:]):
@@ -67,24 +68,7 @@ class HTTPServer:
                 print(head)
                 connection.sendall((head+body).encode())
                     
-                # elif(cdirectory=="/www/rough"):
-                #     for file in os.listdir(cdirectory[1:]):
-                #         body+=f'<a href="{os.path.join(cdirectory,file)}">{file}</a><br>'
-                #     head = f'HTTP/1.1 200 OK \nContent-Type: text/html\nContent-Length: {str(len(body))} \nConnection: close\n\n'
-                #     print(head)
-                #     connection.sendall((head+body).encode())
                 
-                # elif(cdirectory=="/bin"):
-                #     # for (root,dirs,files) in os.walk('bin', topdown=True):
-                #     #     print (root)
-                #     #     print (dirs)
-                #     #     print (files)
-                #     #     print ('--------------------------------')
-                #     for file in os.listdir(cdirectory[1:]):
-                #         body+=f'<a href="{os.path.join(cdirectory,file)}">{file}</a><br>'
-                #     head = f'HTTP/1.1 200 OK \nContent-Type: text/html\nContent-Length: {str(len(body))} \nConnection: close\n\n'
-                #     print(head)
-                #     connection.sendall((head+body).encode())
             
             elif(cdirectory=="/bin/du"):
                 # p1 = exec('du')
@@ -95,6 +79,7 @@ class HTTPServer:
                 head += output_data
                 print(head,"HEAD")
                 connection.sendall((head).encode())
+                
 
 
             elif(cdirectory=="/bin/ls"):
